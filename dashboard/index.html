@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Token Radar: protokol besar tanpa token</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <h1>Token Radar</h1>
+    <p class="sub">Protokol DefiLlama yang sudah besar tetapi belum punya token, diurutkan menurut perkiraan nilai tokennya. Snapshot 14 Nov 2026.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="demo" class="banner" hidden>Mode contoh: data board belum disuntik. Angka di bawah hanya kasar, bukan hasil model. Muat <code>board.json</code> hasil <code>lib/model.ts</code> di bawah.</div>
+
+  <section id="list-view">
+    <details class="card model" open>
+      <summary>Cara membaca ranking</summary>
+      <p class="formula">implied = TVL × rasio kategori × f(growth 7h) × f(chain) × f(umur) × f(keyakinan)</p>
+      <ul>
+        <li><b>Rasio kategori</b>: median mcap/TVL dari protokol <i>bertoken</i> di kategori yang sama. Kategori dengan sampel sedikit digeser ke median global.</li>
+        <li><b>Faktor</b> growth, chain, dan umur kecil dan dibatasi, sehingga TVL tetap jangkar utama. Keyakinan memotong nilai bila data tipis (sedang ×0,92, rendah ×0,80).</li>
+        <li><b>Rentang</b> rendah / tengah / tinggi memakai sebaran kuartil rasio kategori, lebih lebar bila keyakinan rendah.</li>
+        <li><b>Farm plan</b> hanya langkah memakai produk. Selalu <b>spekulatif, tidak ada bukti airdrop</b>.</li>
+      </ul>
+    </details>
+
+    <section class="filters card" aria-label="Filter">
+      <label>Cari<input id="f-q" type="search" placeholder="nama, kategori, chain"></label>
+      <label>Kategori<select id="f-cat"><option value="">Semua</option></select></label>
+      <label>Chain<select id="f-chain"><option value="">Semua</option></select></label>
+      <label>TVL minimum
+        <select id="f-tvl">
+          <option value="0">Semua</option>
+          <option value="10000000">$10 jt</option>
+          <option value="50000000">$50 jt</option>
+          <option value="100000000">$100 jt</option>
+          <option value="500000000">$500 jt</option>
+          <option value="1000000000">$1 M</option>
+        </select>
+      </label>
+      <label>Keyakinan
+        <select id="f-conf"><option value="">Semua</option><option>tinggi</option><option>sedang</option><option>rendah</option></select>
+      </label>
+      <label>Urut
+        <select id="f-sort"><option value="rank">Ranking</option><option value="tvl">TVL</option><option value="chg">Growth 7h</option></select>
+      </label>
+      <label class="chk"><input id="f-wl" type="checkbox"> Hanya watchlist (TVL ≥ floor)</label>
+      <button id="f-reset" type="button">Reset</button>
+    </section>
+
+    <section id="stats" class="stats"></section>
+
+    <div class="card tbl-wrap">
+      <table id="tbl">
+        <thead>
+          <tr><th>#</th><th>Protokol</th><th>Chain</th><th class="r">TVL</th><th class="r">7h</th><th class="r">Implied value (tengah)</th><th>Rentang</th><th>Keyakinan</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <p id="empty" class="muted" hidden>Tidak ada protokol yang cocok dengan filter.</p>
+    </div>
+
+    <p class="muted foot">
+      <label class="file">Muat board.json <input id="f-file" type="file" accept=".json,application/json"></label>
+      Implied value adalah estimasi berbasis perbandingan, bukan harga atau janji peluncuran token. Bukan saran investasi.
+    </p>
+  </section>
+
+  <section id="detail-view" hidden></section>
+</main>
+
+<script id="board-data" type="application/json">[]</script>
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
